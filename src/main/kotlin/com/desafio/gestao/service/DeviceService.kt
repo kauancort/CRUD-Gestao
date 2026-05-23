@@ -6,7 +6,9 @@ import com.desafio.gestao.dto.response.DeviceResponse
 import com.desafio.gestao.model.Device
 import com.desafio.gestao.repository.DeviceRepository
 import com.desafio.gestao.repository.OrganizationRepository
+import org.springframework.stereotype.Service
 
+@Service
 class DeviceService(
     private val deviceRepository: DeviceRepository,
     private val organizationRepository: OrganizationRepository

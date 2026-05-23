@@ -31,7 +31,6 @@ class Collaborator(
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     var accessLevel: CollaboratorType,
-
     @ManyToOne
     @JoinColumn(name = "Organization_id")
     var organization: Organization,

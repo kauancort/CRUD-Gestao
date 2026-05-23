@@ -25,7 +25,7 @@ class Device(
     var assetTag: String,
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "device_condition", nullable = false)
     var condition: DeviceCondition,
 
     @ManyToOne
@@ -35,11 +35,10 @@ class Device(
 
 ) {
 
-    @CreationTimestamp
-    var createdAt: LocalDateTime? = null
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0
 
+    @CreationTimestamp
+    var createdAt: LocalDateTime? = null
 }

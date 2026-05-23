@@ -1,6 +1,7 @@
 package com.desafio.gestao.service
 
 import com.desafio.gestao.dto.request.CollaboratorRequest
+import com.desafio.gestao.dto.request.CollaboratorUpdateRequest
 import com.desafio.gestao.dto.response.CollaboratorResponse
 import com.desafio.gestao.model.Collaborator
 import com.desafio.gestao.repository.CollaboratorRepository
@@ -44,4 +45,42 @@ class CollaboratorService(
             );
     }
 
+    fun listAll(): List<CollaboratorResponse> {
+        return collaboratorRepository.findAll()
+            .map { collaborator ->
+                CollaboratorResponse (
+                    collaborator.id,
+                    collaborator.fullName,
+                    collaborator.email,
+                    collaborator.accessLevel,
+                    collaborator.organization.id
+                )
+            }
+    }
+
+    fun update(id: Long, request: CollaboratorUpdateRequest): CollaboratorResponse {
+        val collaborator = collaboratorRepository.findById(id)
+            .orElseThrow { RuntimeException("Funcionário nao encontraddo") }
+
+        request.fullName?.let { collaborator.fullName = it }
+        request.email?.let { collaborator.email = it }
+        request.password?.let { collaborator.password = it }
+        request.accessLevel?.let { collaborator.accessLevel = it }
+        request.organization?.let { collaborator.organization = it }
+
+        collaboratorRepository.save(collaborator)
+
+        return CollaboratorResponse (
+            collaborator.id,
+            collaborator.fullName,
+            collaborator.email,
+            collaborator.accessLevel,
+            collaborator.organization.id
+        )
+
+    }
+
+    fun delete(id: Long) {
+        collaboratorRepository.deleteById(id)
+    }
 }

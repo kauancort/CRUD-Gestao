@@ -1,6 +1,7 @@
 package com.desafio.gestao.service
 
 import com.desafio.gestao.dto.request.DeviceRequest
+import com.desafio.gestao.dto.request.DeviceRequestCondition
 import com.desafio.gestao.dto.response.DeviceResponse
 import com.desafio.gestao.model.Device
 import com.desafio.gestao.repository.DeviceRepository
@@ -47,4 +48,21 @@ class DeviceService(
             }
     }
 
+    fun update(id: Long, request: DeviceRequestCondition): DeviceResponse {
+
+        val device = deviceRepository.findById(id)
+            .orElseThrow{ RuntimeException("id nao encontrado") }
+
+        device.condition = request.condition
+
+        val updated = deviceRepository.save(device)
+
+        return DeviceResponse(updated.id, updated.model, updated.assetTag, updated.condition,
+            updated.organization.id)
+
+    }
+
+    fun delete(id: Long) {
+        deviceRepository.deleteById(id)
+    }
 }

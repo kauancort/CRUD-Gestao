@@ -19,11 +19,14 @@ class Organization(
     @Column(nullable = false, unique = true)
     var registrationCode: Int,
 
+
+) {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long = 0,
+    var id: Long = 0
 
     @CreationTimestamp
-    var createdAt: LocalDateTime = LocalDateTime.now()
+    var createdAt: LocalDateTime? = null
 
-)
+}

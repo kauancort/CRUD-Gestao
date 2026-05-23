@@ -25,12 +25,14 @@ class Device(
     @JoinColumn(name = "organization_id")
     var organizationId: Organization,
 
+
+) {
+
     @CreationTimestamp
-    var createdAt: LocalDateTime = LocalDateTime.now(),
+    var createdAt: LocalDateTime? = null
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Int
+    var id: Long = 0
 
-) {
 }

@@ -23,7 +23,7 @@ class Device(
 
     @ManyToOne
     @JoinColumn(name = "organization_id")
-    var organizationId: Organization,
+    var organization: Organization,
 
 
 ) {

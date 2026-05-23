@@ -7,5 +7,6 @@ import org.springframework.stereotype.Repository
 @Repository
 interface CollaboratorRepository : JpaRepository<Collaborator, Long> {
 
+    fun existsByEmail(email: String): Boolean
 }
 

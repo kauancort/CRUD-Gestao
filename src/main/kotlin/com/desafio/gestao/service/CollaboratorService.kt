@@ -9,36 +9,43 @@ import org.springframework.stereotype.Service
 
 @Service
 class CollaboratorService(
-    private val repository: CollaboratorRepository,
+    private val collaboratorRepository: CollaboratorRepository,
     private val organizationRepository: OrganizationRepository
 )  {
 
     fun create(request: CollaboratorRequest ): CollaboratorResponse {
 
-        val org = organizationRepository.findById(request.organizationId)
-                                            .orElseThrow{ RuntimeException("Organização não encontrada") }
+        if (collaboratorRepository.existsByEmail(request.email)) {
+            throw RuntimeException("Este email ja existe")
+        }
 
-        val saved = repository.save(
+        val org = organizationRepository.findById(request.organizationId)
+                .orElseThrow{
+                    RuntimeException("Organização não encontrada")
+                }
+
+
+        val collaborator = collaboratorRepository.save(
             Collaborator(
-                    request.fullName,
-                    request.email,
-                    request.password,
-                    request.accessLevel,
-                    org
+                request.fullName,
+                request.email,
+                request.password,
+                request.accessLevel,
+                org
             )
         )
 
         return CollaboratorResponse (
-            saved.id,
-            saved.fullName,
-            saved.email,
-            saved.accessLevel,
-            org.id
+            collaborator.id,
+            collaborator.fullName,
+            collaborator.email,
+            collaborator.accessLevel,
+            collaborator.organization.id
             );
     }
 
 
     //fun update(request: CollaboratorRequest ): CollaboratorResponse {}
 
-    fun findAll(): List<Collaborator> = repository.findAll()
+    fun findAll(): List<Collaborator> = collaboratorRepository.findAll()
 }

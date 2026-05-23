@@ -20,19 +20,31 @@ class DeviceService(
             Device(
                 request.model,
                 request.assetTag,
+                request.condition,
                 orgId
             )
         )
 
         return DeviceResponse(
+            save.id,
             save.model,
             save.assetTag,
+            save.condition,
             save.organization.id
         )
-
     }
 
-
-
+    fun findAll(): List<DeviceResponse> {
+        return deviceRepository.findAll()
+            .map { device ->
+                DeviceResponse(
+                    device.id,
+                    device.model,
+                    device.assetTag,
+                    device.condition,
+                    device.organization.id,
+                )
+            }
+    }
 
 }

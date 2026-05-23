@@ -1,7 +1,10 @@
 package com.desafio.gestao.model
 
+import com.desafio.gestao.model.enums.DeviceCondition
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
@@ -20,6 +23,10 @@ class Device(
 
     @Column(nullable = false, unique = true)
     var assetTag: String,
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    var condition: DeviceCondition,
 
     @ManyToOne
     @JoinColumn(name = "organization_id")

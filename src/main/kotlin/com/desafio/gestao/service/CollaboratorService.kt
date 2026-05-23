@@ -44,8 +44,4 @@ class CollaboratorService(
             );
     }
 
-
-    //fun update(request: CollaboratorRequest ): CollaboratorResponse {}
-
-    fun findAll(): List<Collaborator> = collaboratorRepository.findAll()
 }

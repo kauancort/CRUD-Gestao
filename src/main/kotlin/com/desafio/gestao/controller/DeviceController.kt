@@ -2,6 +2,7 @@ package com.desafio.gestao.controller
 
 import com.desafio.gestao.dto.request.DeviceRequest
 import com.desafio.gestao.dto.request.DeviceRequestCondition
+import com.desafio.gestao.dto.response.CollaboratorResponse
 import com.desafio.gestao.dto.response.DeviceResponse
 import com.desafio.gestao.service.DeviceService
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -25,6 +26,11 @@ class DeviceController(private val service: DeviceService) {
     @GetMapping
     fun findAll(): List<DeviceResponse> {
         return service.findAll()
+    }
+
+    @GetMapping("/{id}")
+    fun findById(@PathVariable id: Long): DeviceResponse {
+        return service.findById(id)
     }
 
     @PutMapping("/{id}")

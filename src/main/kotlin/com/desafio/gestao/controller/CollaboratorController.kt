@@ -15,30 +15,35 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/collabs")
-class CollaboratorController (private val serice: CollaboratorService) {
+class CollaboratorController (private val service: CollaboratorService) {
 
     @PostMapping
     fun create(@RequestBody collaborator: CollaboratorRequest): CollaboratorResponse {
-        return serice.create(collaborator) 
+        return service.create(collaborator)
     }
 
     @GetMapping
     fun findAll() : List<CollaboratorResponse> {
 
-        return serice.listAll()
+        return service.listAll()
+    }
+
+    @GetMapping("/{id}")
+    fun findById(@PathVariable id: Long): CollaboratorResponse {
+        return service.findById(id)
     }
 
     @PutMapping("/{id}")
     fun update(@PathVariable id: Long,
                @RequestBody updateRequest: CollaboratorUpdateRequest) : CollaboratorResponse {
 
-        return serice.update(id, updateRequest)
+        return service.update(id, updateRequest)
 
     }
 
     @DeleteMapping("/{id}")
     fun delete(@PathVariable id: Long) {
-        return serice.delete(id)
+        return service.delete(id)
     }
 
 }

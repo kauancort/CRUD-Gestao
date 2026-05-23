@@ -58,6 +58,21 @@ class CollaboratorService(
             }
     }
 
+    fun findById(id: Long): CollaboratorResponse {
+
+        val find = collaboratorRepository.findById(id)
+        .orElseThrow{RuntimeException("Id nao encontrado")}
+
+        return CollaboratorResponse(
+            find.id,
+            find.fullName,
+            find.email,
+            find.accessLevel,
+            find.organization.id
+        )
+
+    }
+
     fun update(id: Long, request: CollaboratorUpdateRequest): CollaboratorResponse {
         val collaborator = collaboratorRepository.findById(id)
             .orElseThrow { RuntimeException("Funcionário nao encontraddo") }

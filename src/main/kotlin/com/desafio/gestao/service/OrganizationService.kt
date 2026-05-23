@@ -3,6 +3,8 @@ package com.desafio.gestao.service
 import com.desafio.gestao.dto.request.OrganizationRequest
 import com.desafio.gestao.dto.request.OrganizationRequestName
 import com.desafio.gestao.dto.response.OrganizationResponse
+import com.desafio.gestao.model.Collaborator
+import com.desafio.gestao.model.Device
 import com.desafio.gestao.model.Organization
 import com.desafio.gestao.repository.OrganizationRepository
 import org.springframework.stereotype.Service
@@ -35,6 +37,19 @@ class OrganizationService (private val organizationRepository: OrganizationRepos
                 org.registrationCode
             )
         }
+    }
+
+
+    fun findById(id: Long): OrganizationResponse {
+
+        val find = organizationRepository.findById(id)
+            .orElseThrow{RuntimeException("Id nao encontrado")}
+
+        return OrganizationResponse(
+            find.id,
+            find.corporateName,
+            find.registrationCode
+        )
     }
 
     fun update(id: Long, request: OrganizationRequestName): OrganizationResponse {

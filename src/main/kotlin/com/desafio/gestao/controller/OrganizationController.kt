@@ -2,6 +2,7 @@ package com.desafio.gestao.controller
 
 import com.desafio.gestao.dto.request.OrganizationRequest
 import com.desafio.gestao.dto.request.OrganizationRequestName
+import com.desafio.gestao.dto.response.CollaboratorResponse
 import com.desafio.gestao.dto.response.OrganizationResponse
 
 import com.desafio.gestao.service.OrganizationService
@@ -28,6 +29,11 @@ class OrganizationController(private val service: OrganizationService) {
     @GetMapping
     fun findAll(): List<OrganizationResponse> {
         return service.findAll()
+    }
+
+    @GetMapping("/{id}")
+    fun findById(@PathVariable id: Long): OrganizationResponse {
+        return service.findById(id)
     }
 
     @PutMapping("/{id}")

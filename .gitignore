@@ -1,0 +1,38 @@
+# =========================
+# BACKEND - SPRING
+# =========================
+
+gestao/target/
+gestao/.idea/
+gestao/*.iml
+
+# Maven wrapper cache
+gestao/.mvn/
+
+# env
+gestao/.env
+
+# logs
+gestao/*.log
+
+# =========================
+# FRONTEND - ANGULAR
+# =========================
+
+AngularCRUD-Gestao/node_modules/
+AngularCRUD-Gestao/dist/
+AngularCRUD-Gestao/.angular/
+AngularCRUD-Gestao/.vscode/
+AngularCRUD-Gestao/.idea/
+
+# logs
+AngularCRUD-Gestao/npm-debug.log*
+AngularCRUD-Gestao/yarn-debug.log*
+AngularCRUD-Gestao/yarn-error.log*
+
+# =========================
+# SYSTEM
+# =========================
+
+.DS_Store
+Thumbs.db

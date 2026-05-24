@@ -12,6 +12,9 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import org.hibernate.annotations.CreationTimestamp
+import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.core.userdetails.UserDetails
 import java.time.LocalDateTime
 
 @Entity
@@ -32,11 +35,23 @@ class Collaborator(
     @Column(nullable = false)
     var accessLevel: CollaboratorType,
     @ManyToOne
-    @JoinColumn(name = "Organization_id")
+    @JoinColumn(name = "organization_id", nullable = false)
     var organization: Organization,
 
 
-    ) {
+    ) : UserDetails {
+
+    override fun getAuthorities(): Collection<GrantedAuthority> =
+        listOf(SimpleGrantedAuthority("ROLE_${accessLevel.name}"))
+
+    override fun getPassword() = password
+    override fun getUsername() = email
+    override fun isAccountNonExpired() = true
+    override fun isAccountNonLocked() = true
+    override fun isCredentialsNonExpired() = true
+    override fun isEnabled() = true
+
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

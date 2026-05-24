@@ -6,13 +6,17 @@ import com.desafio.gestao.dto.response.CollaboratorResponse
 import com.desafio.gestao.model.Collaborator
 import com.desafio.gestao.repository.CollaboratorRepository
 import com.desafio.gestao.repository.OrganizationRepository
+import org.springframework.security.core.userdetails.User
+import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
 
 @Service
 class CollaboratorService(
     private val collaboratorRepository: CollaboratorRepository,
     private val organizationRepository: OrganizationRepository
-)  {
+) {
 
     fun create(request: CollaboratorRequest ): CollaboratorResponse {
 

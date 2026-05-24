@@ -29,7 +29,7 @@ class Device(
     var condition: DeviceCondition,
 
     @ManyToOne
-    @JoinColumn(name = "organization_id")
+    @JoinColumn(name = "organization_id", nullable = false)
     var organization: Organization,
 
 

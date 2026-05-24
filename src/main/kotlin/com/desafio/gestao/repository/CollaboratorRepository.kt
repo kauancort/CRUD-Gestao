@@ -8,5 +8,7 @@ import org.springframework.stereotype.Repository
 interface CollaboratorRepository : JpaRepository<Collaborator, Long> {
 
     fun existsByEmail(email: String): Boolean
+
+    fun findByEmail(email: String): Collaborator?
 }
 

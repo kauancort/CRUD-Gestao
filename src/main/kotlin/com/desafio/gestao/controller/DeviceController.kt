@@ -2,9 +2,9 @@ package com.desafio.gestao.controller
 
 import com.desafio.gestao.dto.request.DeviceRequest
 import com.desafio.gestao.dto.request.DeviceRequestCondition
-import com.desafio.gestao.dto.response.CollaboratorResponse
 import com.desafio.gestao.dto.response.DeviceResponse
 import com.desafio.gestao.service.DeviceService
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -23,9 +23,15 @@ class DeviceController(private val service: DeviceService) {
         return service.create(device)
     }
 
-    @GetMapping
+    @GetMapping("/find-all")
+    @PreAuthorize("hasRole('MANAGER')")
     fun findAll(): List<DeviceResponse> {
         return service.findAll()
+    }
+
+    @GetMapping()
+    fun findAllByOrg(): List<DeviceResponse> {
+        return service.findByOrg()
     }
 
     @GetMapping("/{id}")
@@ -34,11 +40,14 @@ class DeviceController(private val service: DeviceService) {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('MANAGER')")
     fun update(@PathVariable id: Long, @RequestBody device: DeviceRequestCondition): DeviceResponse {
         return service.update(id, device)
     }
 
+
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('MANAGER')")
     fun delete(@PathVariable id: Long) {
         service.delete(id)
     }

@@ -29,7 +29,7 @@ class Collaborator(
     var email: String,
 
     @Column(nullable = false)
-    var password: String,
+    private var password: String,
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -44,13 +44,16 @@ class Collaborator(
     override fun getAuthorities(): Collection<GrantedAuthority> =
         listOf(SimpleGrantedAuthority("ROLE_${accessLevel.name}"))
 
-    override fun getPassword() = password
+    override fun getPassword(): String = password
     override fun getUsername() = email
     override fun isAccountNonExpired() = true
     override fun isAccountNonLocked() = true
     override fun isCredentialsNonExpired() = true
     override fun isEnabled() = true
 
+    fun changePassword(newPassword: String) {
+        this.password = newPassword
+    }
 
 
     @Id

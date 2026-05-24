@@ -4,6 +4,7 @@ import com.desafio.gestao.dto.request.CollaboratorRequest
 import com.desafio.gestao.dto.request.CollaboratorUpdateRequest
 import com.desafio.gestao.dto.response.CollaboratorResponse
 import com.desafio.gestao.service.CollaboratorService
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -22,10 +23,16 @@ class CollaboratorController (private val service: CollaboratorService) {
         return service.create(collaborator)
     }
 
-    @GetMapping
+    @GetMapping("/find-all")
+    @PreAuthorize("hasRole('MANAGER')")
     fun findAll() : List<CollaboratorResponse> {
 
-        return service.listAll()
+        return service.findAll()
+    }
+
+    @GetMapping()
+    fun findAllByOrg(): List<CollaboratorResponse> {
+        return service.findAll()
     }
 
     @GetMapping("/{id}")
@@ -33,6 +40,7 @@ class CollaboratorController (private val service: CollaboratorService) {
         return service.findById(id)
     }
 
+    @PreAuthorize("hasRole('MANAGER')")
     @PutMapping("/{id}")
     fun update(@PathVariable id: Long,
                @RequestBody updateRequest: CollaboratorUpdateRequest) : CollaboratorResponse {
@@ -41,6 +49,7 @@ class CollaboratorController (private val service: CollaboratorService) {
 
     }
 
+    @PreAuthorize("hasRole('MANAGER')")
     @DeleteMapping("/{id}")
     fun delete(@PathVariable id: Long) {
         return service.delete(id)

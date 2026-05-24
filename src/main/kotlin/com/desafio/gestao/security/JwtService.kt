@@ -13,10 +13,10 @@ import java.util.Date
 @Service
 class JwtService(
 
-    @Value("\${jwt.secret}")
+    @Value("\${app.jwt.secret}")
     private val secretKey: String,
 
-    @Value("\${jwt.expiration}")
+    @Value("\${app.jwt.expiration}")
     private val jwtExpiration: Long
 
 ) {

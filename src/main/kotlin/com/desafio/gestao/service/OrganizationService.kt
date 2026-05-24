@@ -39,7 +39,6 @@ class OrganizationService (private val organizationRepository: OrganizationRepos
         }
     }
 
-
     fun findById(id: Long): OrganizationResponse {
 
         val find = organizationRepository.findById(id)

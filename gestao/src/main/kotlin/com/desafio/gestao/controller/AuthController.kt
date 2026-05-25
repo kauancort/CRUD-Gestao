@@ -18,12 +18,12 @@ class AuthController(private val service: AuthService) {
 
 
     @PostMapping("/register")
-    fun register(@RequestBody request: RegisterRequest): ResponseEntity<String> {
+    fun register(@RequestBody request: RegisterRequest): ResponseEntity<Void> {
 
+        //esse linha 23:
         service.register(request)
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("Usuário criado com sucesso!")
-
+        return ResponseEntity.status(HttpStatus.CREATED).build()
     }
 
     @PostMapping("/login")

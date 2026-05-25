@@ -1,0 +1,28 @@
+<header class="header">
+  <div class="header__left">
+    <span class="header__eyebrow">Painel administrativo</span>
+    <strong>Gestao operacional</strong>
+  </div>
+
+  <div class="header__right">
+    @if (authStore.currentUser(); as user) {
+      <div class="user-menu">
+        <div class="user-menu__avatar">
+          {{ initials }}
+        </div>
+
+        <div class="user-menu__info">
+          <span class="user-menu__name">{{ user.fullName || user.email }}</span>
+          <span class="user-menu__role">
+            <span class="role-pill" [class.role-pill--manager]="user.role === 'MANAGER'">
+              {{ roleLabel(user.role) }}
+            </span>
+            {{ orgName }}
+          </span>
+        </div>
+
+        <lucide-icon [img]="ChevronDown" class="user-menu__icon"></lucide-icon>
+      </div>
+    }
+  </div>
+</header>

@@ -1,0 +1,38 @@
+<div class="page-header">
+  <div>
+    <h1 class="page-title">Dashboard</h1>
+    <p class="page-subtitle">Visão geral do sistema</p>
+  </div>
+</div>
+
+@if (loading()) {
+  <div class="empty-state">Carregando dados...</div>
+} @else {
+  <div class="dashboard-grid">
+    <div class="stat-card">
+      <div class="stat-card__header">
+        <span class="stat-card__title">Total de Devices</span>
+        <lucide-icon [img]="MonitorSmartphone" class="stat-card__icon"></lucide-icon>
+      </div>
+      <div class="stat-card__value">{{ stats().totalDevices }}</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-card__header">
+        <span class="stat-card__title">Colaboradores</span>
+        <lucide-icon [img]="Users" class="stat-card__icon"></lucide-icon>
+      </div>
+      <div class="stat-card__value">{{ stats().totalCollaborators }}</div>
+    </div>
+
+    @if (authStore.canAccessOrganizations()) {
+      <div class="stat-card">
+        <div class="stat-card__header">
+          <span class="stat-card__title">Organizações Ativas</span>
+          <lucide-icon [img]="Building2" class="stat-card__icon"></lucide-icon>
+        </div>
+        <div class="stat-card__value">{{ stats().totalOrganizations }}</div>
+      </div>
+    }
+  </div>
+}

@@ -4,6 +4,8 @@ import com.desafio.gestao.dto.request.CollaboratorRequest
 import com.desafio.gestao.dto.request.CollaboratorUpdateRequest
 import com.desafio.gestao.dto.response.CollaboratorResponse
 import com.desafio.gestao.dto.response.DeviceResponse
+import com.desafio.gestao.exception.BadRequestException
+import com.desafio.gestao.exception.ConflictException
 import com.desafio.gestao.model.Collaborator
 import com.desafio.gestao.model.enums.CollaboratorType
 import com.desafio.gestao.repository.CollaboratorRepository
@@ -22,12 +24,12 @@ class CollaboratorService(
     fun create(request: CollaboratorRequest ): CollaboratorResponse {
 
         if (collaboratorRepository.existsByEmail(request.email)) {
-            throw RuntimeException("Este email ja existe")
+            throw ConflictException("Email já cadastrado")
         }
 
         val org = organizationRepository.findById(request.organizationId)
                 .orElseThrow{
-                    RuntimeException("Organização não encontrada")
+                    throw BadRequestException("Código da empresa inválido")
                 }
 
 

@@ -1,0 +1,49 @@
+<aside class="sidebar">
+  <div class="sidebar__brand">
+    <div class="sidebar__logo">
+      <img src="/favicon.png" alt="RodoJacto" />
+    </div>
+    <div class="sidebar__title">
+      <span>CRUD</span> Gestao
+    </div>
+  </div>
+
+  <nav class="sidebar__nav">
+    <div class="nav-section">
+      <p class="nav-section__title">Geral</p>
+
+      <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
+        <lucide-icon [img]="LayoutDashboard" class="nav-item__icon"></lucide-icon>
+        <span>Dashboard</span>
+      </a>
+
+      <a routerLink="/devices" routerLinkActive="active" class="nav-item">
+        <lucide-icon [img]="MonitorSmartphone" class="nav-item__icon"></lucide-icon>
+        <span>Devices</span>
+      </a>
+
+      <a routerLink="/collabs" routerLinkActive="active" class="nav-item">
+        <lucide-icon [img]="Users" class="nav-item__icon"></lucide-icon>
+        <span>Colaboradores</span>
+      </a>
+    </div>
+
+    @if (authStore.canAccessOrganizations()) {
+      <div class="nav-section">
+        <p class="nav-section__title">Administracao</p>
+
+        <a routerLink="/orgs" routerLinkActive="active" class="nav-item">
+          <lucide-icon [img]="Building2" class="nav-item__icon"></lucide-icon>
+          <span>Organizacoes</span>
+        </a>
+      </div>
+    }
+  </nav>
+
+  <div class="sidebar__footer">
+    <button class="nav-item nav-item--logout" (click)="logout()">
+      <lucide-icon [img]="LogOut" class="nav-item__icon"></lucide-icon>
+      <span>Sair</span>
+    </button>
+  </div>
+</aside>

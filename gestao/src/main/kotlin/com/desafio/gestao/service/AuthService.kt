@@ -3,6 +3,8 @@ package com.desafio.gestao.service
 import com.desafio.gestao.dto.loginRegister.LoginRequest
 import com.desafio.gestao.dto.loginRegister.LoginResponse
 import com.desafio.gestao.dto.loginRegister.RegisterRequest
+import com.desafio.gestao.exception.NotFoundException
+import com.desafio.gestao.exception.ValidationException
 import com.desafio.gestao.model.Collaborator
 import com.desafio.gestao.repository.CollaboratorRepository
 import com.desafio.gestao.repository.OrganizationRepository
@@ -23,24 +25,32 @@ class AuthService(
 
     fun register(request: RegisterRequest) {
 
+        val errors = mutableListOf<String>()
+
         if (collaboratorRepository.existsByEmail(request.email)) {
-            throw RuntimeException("Email já cadastrado")
+            errors.add("Email já cadastrado.")
         }
 
-        val organization = organizationRepository.findById(request.organizationId)
-            .orElseThrow {
-                RuntimeException("Organização não encontrada")
-            }
+        val organization = organizationRepository
+            .findById(request.organizationId)
 
-        val encoded: String = passwordEncoder.encode(request.password)?:
-            throw RuntimeException("erro ao criptografar senha")
+        if (organization.isEmpty) {
+            errors.add("Organização não encontrada.")
+        }
+
+        if (errors.isNotEmpty()) {
+            //isso pertence a linha 42:
+            throw ValidationException(errors)
+        }
+
+        val encoded = passwordEncoder.encode(request.password)!!
 
         val collaborator = Collaborator(
             fullName = request.fullName,
             email = request.email,
             password = encoded,
             accessLevel = request.accessLevel,
-            organization = organization
+            organization = organization.get()
         )
 
         collaboratorRepository.save(collaborator)
@@ -55,11 +65,14 @@ class AuthService(
             )
         )
 
-        val collaborator = collaboratorRepository.findByEmail(request.email)
-            ?: throw RuntimeException("Usuário não encontrado")
+        val collaborator = collaboratorRepository
+            .findByEmail(request.email)
+            ?: throw NotFoundException("Usuário não encontrado")
 
         val token = jwtService.generateToken(collaborator)
 
-        return LoginResponse(token)
+        return LoginResponse(
+            token = token
+        )
     }
 }

@@ -32,7 +32,7 @@ class CollaboratorController (private val service: CollaboratorService) {
 
     @GetMapping()
     fun findAllByOrg(): List<CollaboratorResponse> {
-        return service.findAll()
+        return service.findAllByOrg()
     }
 
     @GetMapping("/{id}")

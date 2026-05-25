@@ -1,0 +1,238 @@
+<section class="resource-page">
+  <div class="page-header resource-header">
+    <div>
+      <span class="resource-kicker">Equipe</span>
+      <h1 class="page-title">Colaboradores</h1>
+      <p class="page-subtitle">{{ scopeLabel }}</p>
+    </div>
+
+    @if (authStore.canManageRecords()) {
+      <div class="resource-actions">
+        <div class="resource-filter">
+          <lucide-icon [img]="Search"></lucide-icon>
+          <input
+            type="number"
+            min="1"
+            placeholder="Buscar por ID"
+            [(ngModel)]="searchId"
+            (keydown.enter)="searchById()"
+          />
+          @if (searchId) {
+            <button type="button" class="filter-icon-button" aria-label="Limpar busca" (click)="clearSearch()">
+              <lucide-icon [img]="X"></lucide-icon>
+            </button>
+          }
+        </div>
+
+        <button type="button" class="btn btn-primary resource-action" (click)="searchById()">
+          <lucide-icon [img]="Search" class="btn-icon-svg"></lucide-icon>
+          Filtrar
+        </button>
+
+        <button type="button" class="btn btn-primary resource-action" (click)="openCreate()">
+          <lucide-icon [img]="CirclePlus" class="btn-icon-svg"></lucide-icon>
+          Adicionar
+        </button>
+      </div>
+    } @else {
+      <span class="viewer-chip">Somente visualizacao - {{ authStore.organizationLabel() }}</span>
+    }
+  </div>
+
+  @if (errorMessage()) {
+    <div class="permission-note">
+      {{ errorMessage() }}
+    </div>
+  }
+
+  @if (loading()) {
+    <div class="empty-state resource-empty">
+      <p>Carregando colaboradores...</p>
+    </div>
+  } @else if (collabs().length === 0) {
+    <div class="empty-state resource-empty">
+      <p>Nenhum colaborador encontrado.</p>
+    </div>
+  } @else {
+    <div class="collab-list">
+      @for (collab of collabs(); track collab.id) {
+        <article class="collab-card">
+          <div class="collab-card__identity">
+            <div class="collab-avatar" aria-hidden="true">
+              {{ initials(collab.fullName) }}
+            </div>
+
+            <div class="collab-card__main">
+              <div class="collab-card__title-row">
+                <h2>{{ collab.fullName }}</h2>
+                <span class="role-badge" [ngClass]="accessLevelClass(collab.accessLevel)">
+                  {{ accessLevelLabel(collab.accessLevel) }}
+                </span>
+              </div>
+
+              <div class="collab-email">
+                <lucide-icon [img]="Mail"></lucide-icon>
+                <span>{{ collab.email }}</span>
+              </div>
+            </div>
+          </div>
+
+          @if (authStore.canViewAllRecords()) {
+            <div class="collab-card__meta">
+              <span class="meta-label">Organizacao</span>
+              <strong>#{{ collab.organizationId }}</strong>
+            </div>
+          }
+
+          <div class="collab-card__actions">
+            @if (authStore.canManageRecords()) {
+              <button type="button" class="icon-action" aria-label="Editar colaborador" (click)="openEdit(collab)">
+                <lucide-icon [img]="Pencil"></lucide-icon>
+                Editar
+              </button>
+              <button type="button" class="icon-action icon-action--danger" aria-label="Excluir colaborador" (click)="openDelete(collab)">
+                <lucide-icon [img]="Trash2"></lucide-icon>
+                Excluir
+              </button>
+            } @else {
+              <span class="read-only-note">
+                <lucide-icon [img]="Eye"></lucide-icon>
+                Consulta
+              </span>
+            }
+          </div>
+        </article>
+      }
+    </div>
+  }
+</section>
+
+@if (toast(); as currentToast) {
+  <div class="toast" [class.toast--error]="currentToast.type === 'error'">
+    {{ currentToast.message }}
+  </div>
+}
+
+@if (editingCollab(); as collab) {
+  <div class="modal-backdrop" (click)="closeEdit()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal__header">
+        <div>
+          <span class="resource-kicker">Editar colaborador</span>
+          <h2>{{ collab.fullName }}</h2>
+        </div>
+        <button type="button" class="filter-icon-button" aria-label="Fechar" (click)="closeEdit()">
+          <lucide-icon [img]="X"></lucide-icon>
+        </button>
+      </div>
+
+      <div class="form-grid">
+        <label class="form-field">
+          <span>Nome</span>
+          <input type="text" [(ngModel)]="editForm.fullName" />
+        </label>
+
+        <label class="form-field">
+          <span>Email</span>
+          <input type="email" [(ngModel)]="editForm.email" />
+        </label>
+
+        <label class="form-field">
+          <span>Senha</span>
+          <input type="password" placeholder="Manter senha atual" [(ngModel)]="editForm.password" />
+        </label>
+
+        <label class="form-field">
+          <span>Perfil</span>
+          <select [(ngModel)]="editForm.accessLevel">
+            @for (accessLevel of accessLevels; track accessLevel) {
+              <option [ngValue]="accessLevel">{{ accessLevelLabel(accessLevel) }}</option>
+            }
+          </select>
+        </label>
+
+        <label class="form-field">
+          <span>Organizacao</span>
+          <input type="number" min="1" [(ngModel)]="editForm.organizationId" />
+        </label>
+      </div>
+
+      <div class="modal__actions">
+        <button type="button" class="btn btn-ghost" [disabled]="saving()" (click)="closeEdit()">Cancelar</button>
+        <button type="button" class="btn btn-primary" [disabled]="saving()" (click)="saveEdit()">
+          {{ saving() ? 'Salvando...' : 'Salvar' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (creating()) {
+  <div class="modal-backdrop" (click)="closeCreate()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal__header">
+        <div>
+          <span class="resource-kicker">Novo colaborador</span>
+          <h2>Adicionar pessoa</h2>
+        </div>
+        <button type="button" class="filter-icon-button" aria-label="Fechar" (click)="closeCreate()">
+          <lucide-icon [img]="X"></lucide-icon>
+        </button>
+      </div>
+
+      <div class="form-grid">
+        <label class="form-field">
+          <span>Nome</span>
+          <input type="text" [(ngModel)]="createForm.fullName" />
+        </label>
+        <label class="form-field">
+          <span>Email</span>
+          <input type="email" [(ngModel)]="createForm.email" />
+        </label>
+        <label class="form-field">
+          <span>Senha</span>
+          <input type="password" [(ngModel)]="createForm.password" />
+        </label>
+        <label class="form-field">
+          <span>Perfil</span>
+          <select [(ngModel)]="createForm.accessLevel">
+            @for (accessLevel of accessLevels; track accessLevel) {
+              <option [ngValue]="accessLevel">{{ accessLevelLabel(accessLevel) }}</option>
+            }
+          </select>
+        </label>
+        <label class="form-field">
+          <span>Organizacao</span>
+          <input type="number" min="1" [(ngModel)]="createForm.organizationId" />
+        </label>
+      </div>
+
+      <div class="modal__actions">
+        <button type="button" class="btn btn-ghost" [disabled]="saving()" (click)="closeCreate()">Cancelar</button>
+        <button type="button" class="btn btn-primary" [disabled]="saving()" (click)="saveCreate()">
+          {{ saving() ? 'Salvando...' : 'Criar' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (deletingCollab(); as collab) {
+  <div class="modal-backdrop" (click)="closeDelete()">
+    <div class="modal modal--danger" (click)="$event.stopPropagation()">
+      <div class="modal__header">
+        <div>
+          <span class="resource-kicker">Excluir colaborador</span>
+          <h2>{{ collab.fullName }}</h2>
+        </div>
+      </div>
+      <p class="modal__copy">Essa acao remove o colaborador permanentemente.</p>
+      <div class="modal__actions">
+        <button type="button" class="btn btn-ghost" [disabled]="deleting()" (click)="closeDelete()">Cancelar</button>
+        <button type="button" class="btn btn-danger" [disabled]="deleting()" (click)="confirmDelete()">
+          {{ deleting() ? 'Excluindo...' : 'Excluir' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

@@ -1,0 +1,49 @@
+.layout-wrapper {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(46, 125, 50, 0.035) 0%, rgba(244, 246, 248, 0) 280px),
+    var(--color-bg);
+}
+
+.layout-main {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.layout-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+.layout-container {
+  padding: 2rem 2.25rem 2.5rem;
+  max-width: 1180px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+@media (max-width: 900px) {
+  .layout-wrapper {
+    min-height: 100vh;
+    height: auto;
+    overflow: visible;
+  }
+
+  .layout-main {
+    min-width: 0;
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .layout-container {
+    padding: 1.25rem;
+  }
+}

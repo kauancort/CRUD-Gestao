@@ -1,0 +1,170 @@
+<section class="resource-page">
+  <div class="page-header resource-header">
+    <div>
+      <span class="resource-kicker">Administracao</span>
+      <h1 class="page-title">Organizacoes</h1>
+      <p class="page-subtitle">Acesso global permitido apenas para MANAGER</p>
+    </div>
+
+    <div class="resource-actions">
+      <div class="resource-filter">
+        <lucide-icon [img]="Search"></lucide-icon>
+        <input
+          type="number"
+          min="1"
+          placeholder="Buscar por ID"
+          [(ngModel)]="searchId"
+          (keydown.enter)="searchById()"
+        />
+        @if (searchId) {
+          <button type="button" class="filter-icon-button" aria-label="Limpar busca" (click)="clearSearch()">
+            <lucide-icon [img]="X"></lucide-icon>
+          </button>
+        }
+      </div>
+
+      <button type="button" class="btn btn-primary resource-action" (click)="searchById()">
+        <lucide-icon [img]="Search" class="btn-icon-svg"></lucide-icon>
+        Filtrar
+      </button>
+
+      <button type="button" class="btn btn-primary resource-action" (click)="openCreate()">
+        <lucide-icon [img]="CirclePlus" class="btn-icon-svg"></lucide-icon>
+        Nova
+      </button>
+    </div>
+  </div>
+
+  @if (errorMessage()) {
+    <div class="permission-note">
+      {{ errorMessage() }}
+    </div>
+  }
+
+  @if (loading()) {
+    <div class="empty-state resource-empty">
+      <p>Carregando organizacoes...</p>
+    </div>
+  } @else if (orgs().length === 0) {
+    <div class="empty-state resource-empty">
+      <p>Nenhuma organizacao encontrada.</p>
+    </div>
+  } @else {
+    <div class="org-grid">
+      @for (org of orgs(); track org.id) {
+        <article class="org-card">
+          <div class="org-card__icon">
+            <lucide-icon [img]="Building2"></lucide-icon>
+          </div>
+
+          <div class="org-card__main">
+            <span class="meta-label">Organizacao #{{ org.id }}</span>
+            <h2>{{ org.corporateName }}</h2>
+            <p>Registro {{ org.registrationCode }}</p>
+          </div>
+
+          <div class="org-card__actions">
+            @if (authStore.canManageRecords()) {
+              <button type="button" class="icon-action" aria-label="Editar organizacao" (click)="openEdit(org)">
+                <lucide-icon [img]="Pencil"></lucide-icon>
+                Editar
+              </button>
+              <button type="button" class="icon-action icon-action--danger" aria-label="Excluir organizacao" (click)="openDelete(org)">
+                <lucide-icon [img]="Trash2"></lucide-icon>
+                Excluir
+              </button>
+            }
+          </div>
+        </article>
+      }
+    </div>
+  }
+</section>
+
+@if (toast(); as currentToast) {
+  <div class="toast" [class.toast--error]="currentToast.type === 'error'">
+    {{ currentToast.message }}
+  </div>
+}
+
+@if (editingOrg(); as org) {
+  <div class="modal-backdrop" (click)="closeEdit()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal__header">
+        <div>
+          <span class="resource-kicker">Editar organizacao</span>
+          <h2>#{{ org.id }}</h2>
+        </div>
+        <button type="button" class="filter-icon-button" aria-label="Fechar" (click)="closeEdit()">
+          <lucide-icon [img]="X"></lucide-icon>
+        </button>
+      </div>
+
+      <label class="form-field">
+        <span>Nome corporativo</span>
+        <input type="text" [(ngModel)]="editCorporateName" />
+      </label>
+
+      <div class="modal__actions">
+        <button type="button" class="btn btn-ghost" [disabled]="saving()" (click)="closeEdit()">Cancelar</button>
+        <button type="button" class="btn btn-primary" [disabled]="saving()" (click)="saveEdit()">
+          {{ saving() ? 'Salvando...' : 'Salvar' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (creating()) {
+  <div class="modal-backdrop" (click)="closeCreate()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal__header">
+        <div>
+          <span class="resource-kicker">Nova organizacao</span>
+          <h2>Criar registro</h2>
+        </div>
+        <button type="button" class="filter-icon-button" aria-label="Fechar" (click)="closeCreate()">
+          <lucide-icon [img]="X"></lucide-icon>
+        </button>
+      </div>
+
+      <div class="form-grid">
+        <label class="form-field">
+          <span>Nome corporativo</span>
+          <input type="text" [(ngModel)]="createForm.corporateName" />
+        </label>
+        <label class="form-field">
+          <span>Codigo de registro</span>
+          <input type="number" min="1" [(ngModel)]="createForm.registrationCode" />
+        </label>
+      </div>
+
+      <div class="modal__actions">
+        <button type="button" class="btn btn-ghost" [disabled]="saving()" (click)="closeCreate()">Cancelar</button>
+        <button type="button" class="btn btn-primary" [disabled]="saving()" (click)="saveCreate()">
+          {{ saving() ? 'Salvando...' : 'Criar' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+@if (deletingOrg(); as org) {
+  <div class="modal-backdrop" (click)="closeDelete()">
+    <div class="modal modal--danger" (click)="$event.stopPropagation()">
+      <div class="modal__header">
+        <div>
+          <span class="resource-kicker">Excluir organizacao</span>
+          <h2>{{ org.corporateName }}</h2>
+        </div>
+      </div>
+      <p class="modal__copy">Essa acao remove a organizacao permanentemente.</p>
+      <div class="modal__actions">
+        <button type="button" class="btn btn-ghost" [disabled]="deleting()" (click)="closeDelete()">Cancelar</button>
+        <button type="button" class="btn btn-danger" [disabled]="deleting()" (click)="confirmDelete()">
+          {{ deleting() ? 'Excluindo...' : 'Excluir' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

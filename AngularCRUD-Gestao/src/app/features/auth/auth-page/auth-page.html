@@ -1,0 +1,213 @@
+<div class="auth-card">
+  <div class="auth-brand">
+    <div class="auth-brand__icon">
+      <img src="/favicon.png" alt="Logo RodoJacto" />
+    </div>
+    <h1 class="auth-brand__title">
+      CRUD <span class="auth-brand__title-accent">Gestao</span>
+    </h1>
+    <p class="auth-brand__subtitle">
+      {{ isLogin ? 'Acesse sua conta para continuar' : 'Crie sua conta para comecar' }}
+    </p>
+  </div>
+
+  <div class="auth-tabs">
+    <button
+      type="button"
+      class="auth-tabs__btn"
+      [class.auth-tabs__btn--active]="isLogin"
+      [disabled]="loading"
+      (click)="switchMode(true)"
+      id="tab-login">
+      Entrar
+    </button>
+    <button
+      type="button"
+      class="auth-tabs__btn"
+      [class.auth-tabs__btn--active]="!isLogin"
+      [disabled]="loading"
+      (click)="switchMode(false)"
+      id="tab-register">
+      Registrar
+    </button>
+  </div>
+
+  @if (isLogin) {
+    <form class="auth-form" (ngSubmit)="onLogin()" #loginForm="ngForm">
+      <div class="form-group">
+        <label class="form-group__label" for="login-email">E-mail</label>
+        <input
+          class="form-group__input"
+          type="email"
+          id="login-email"
+          name="email"
+          placeholder="seu@email.com"
+          [(ngModel)]="loginData.email"
+          [disabled]="loading"
+          required />
+      </div>
+
+      <div class="form-group">
+        <label class="form-group__label" for="login-password">Senha</label>
+        <input
+          class="form-group__input"
+          type="password"
+          id="login-password"
+          name="password"
+          placeholder="Digite sua senha"
+          [(ngModel)]="loginData.password"
+          [disabled]="loading"
+          required />
+      </div>
+
+      <button type="submit" class="auth-submit" [disabled]="loading" id="btn-login">
+        @if (loading) {
+          <span class="auth-spinner"></span> Entrando...
+        } @else {
+          Entrar
+        }
+      </button>
+    </form>
+
+    @if (successMessage) {
+      <div class="auth-message auth-message--success">
+        <lucide-icon [img]="CheckCircle2"></lucide-icon>
+        <span>{{ successMessage }}</span>
+      </div>
+    }
+
+    @if (errorMessages.length) {
+      <div class="auth-message auth-message--error">
+        <lucide-icon [img]="AlertCircle"></lucide-icon>
+        <div class="auth-message__content">
+          @for (message of errorMessages; track message) {
+            <div>{{ message }}</div>
+          }
+        </div>
+      </div>
+    }
+
+    <p class="auth-footer">
+      Nao tem uma conta?
+      <button type="button" class="auth-footer__link" [disabled]="loading" (click)="switchMode(false)">
+        Registre-se
+      </button>
+    </p>
+  }
+
+  @if (!isLogin) {
+    <form class="auth-form" (ngSubmit)="onRegister(registerForm)" #registerForm="ngForm">
+      <div class="form-group">
+        <label class="form-group__label" for="reg-name">Nome completo</label>
+        <input
+          class="form-group__input"
+          type="text"
+          id="reg-name"
+          name="fullName"
+          placeholder="Joao da Silva"
+          [(ngModel)]="registerData.fullName"
+          [disabled]="loading"
+          required />
+      </div>
+
+      <div class="form-group">
+        <label class="form-group__label" for="reg-email">E-mail</label>
+        <input
+          class="form-group__input"
+          type="email"
+          id="reg-email"
+          name="email"
+          placeholder="seu@email.com"
+          [(ngModel)]="registerData.email"
+          [disabled]="loading"
+          required />
+      </div>
+
+      <div class="form-group">
+        <label class="form-group__label" for="reg-password">Senha</label>
+        <input
+          class="form-group__input"
+          type="password"
+          id="reg-password"
+          name="password"
+          placeholder="Digite sua senha"
+          [(ngModel)]="registerData.password"
+          [disabled]="loading"
+          required />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-group__label" for="reg-access-level">Tipo de acesso</label>
+          <select
+            class="form-group__select"
+            id="reg-access-level"
+            name="accessLevel"
+            [(ngModel)]="registerData.accessLevel"
+            [disabled]="loading"
+            required>
+            <option value="" disabled>Selecione</option>
+            <option value="MANAGER">Gerente</option>
+            <option value="OPERATOR">Operador</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-group__label" for="reg-org">ID da organizacao</label>
+          <input
+            class="form-group__input"
+            type="number"
+            id="reg-org"
+            name="organizationId"
+            placeholder="Ex: 1"
+            [(ngModel)]="registerData.organizationId"
+            [disabled]="loading"
+            required />
+        </div>
+      </div>
+
+      <button type="submit" class="auth-submit" [disabled]="loading" id="btn-register">
+        @if (loading) {
+          <span class="auth-spinner"></span> Registrando...
+        } @else {
+          Criar conta
+        }
+      </button>
+    </form>
+
+    @if (successMessage) {
+      <div class="auth-message auth-message--success">
+        <lucide-icon [img]="CheckCircle2"></lucide-icon>
+        <span>{{ successMessage }}</span>
+      </div>
+    }
+
+    @if (errorMessages.length) {
+      <div class="auth-message auth-message--error">
+        <lucide-icon [img]="AlertCircle"></lucide-icon>
+        <div class="auth-message__content">
+          @for (message of errorMessages; track message) {
+            <div>{{ message }}</div>
+          }
+        </div>
+      </div>
+    }
+
+    <p class="auth-footer">
+      Ja tem uma conta?
+      <button type="button" class="auth-footer__link" [disabled]="loading" (click)="switchMode(true)">
+        Entre aqui
+      </button>
+    </p>
+  }
+</div>
+
+@if (toast; as currentToast) {
+  <div class="auth-toast" [class.auth-toast--error]="currentToast.type === 'error'">
+    <lucide-icon [img]="currentToast.type === 'error' ? AlertCircle : CheckCircle2"></lucide-icon>
+    <span>{{ currentToast.message }}</span>
+    <button type="button" aria-label="Fechar aviso" (click)="dismissToast()">
+      <lucide-icon [img]="X"></lucide-icon>
+    </button>
+  </div>
+}

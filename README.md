@@ -4,6 +4,71 @@ Sistema fullstack de **gestão organizacional** com CRUD completo para gerenciar
 
 ---
 
+## 🚀 Como Executar
+
+### Pré-requisitos
+
+- **Java 21+**
+- **Node.js 18+** e **npm**
+- **MySQL** rodando localmente
+- **Angular CLI** (`npm install -g @angular/cli`)
+
+### Banco de Dados
+
+Antes de iniciar o backend, crie o banco de dados no MySQL:
+
+```sql
+CREATE DATABASE gestao;
+```
+
+### Backend
+
+```bash
+# 1. Navegue até a pasta do backend
+cd gestao
+
+# 2. Copie e configure as variáveis de ambiente
+cp .env.example .env
+# Edite o .env com suas credenciais do MySQL e uma chave JWT
+
+# 3. Execute com Maven Wrapper
+
+# Linux / macOS:
+./mvnw spring-boot:run
+
+# Windows (CMD / PowerShell):
+.\mvnw.cmd spring-boot:run
+```
+
+O backend estará disponível em `http://localhost:8080`.
+
+### Frontend
+
+```bash
+# 1. Navegue até a pasta do frontend
+cd AngularCRUD-Gestao
+
+# 2. Instale as dependências
+npm install
+
+# 3. Inicie o servidor de desenvolvimento
+ng serve
+```
+
+O frontend estará disponível em `http://localhost:4200`.
+
+### Variáveis de Ambiente (Backend)
+
+| Variável         | Descrição                           | Exemplo                                      |
+| ---------------- | ----------------------------------- | -------------------------------------------- |
+| `DB_URL`         | URL de conexão com o MySQL          | `jdbc:mysql://localhost:3306/gestao`       |
+| `DB_USER`        | Usuário do banco                    | `root`                                       |
+| `DB_PASSWORD`    | Senha do banco                      | `senha123`                                   |
+| `JWT_SECRET`     | Chave secreta para assinar tokens   | `minha-chave-secreta-muito-segura`           |
+| `JWT_EXPIRATION` | Tempo de expiração do token (ms)    | `86400000` (24 horas, padrão)                |
+
+---
+
 ## 🛠️ Tecnologias
 
 | Camada     | Tecnologia                                                  |
@@ -181,58 +246,6 @@ gestao/
 - **Organization** → entidade central, possui colaboradores e dispositivos.
 - **Collaborator** → usuário do sistema, pertence a uma organização. Implementa `UserDetails` para autenticação Spring Security. Possui `accessLevel` (enum `CollaboratorType`).
 - **Device** → dispositivo vinculado a uma organização. Possui `condition` (enum `DeviceCondition`).
-
----
-
-## 🚀 Como Executar
-
-### Pré-requisitos
-
-- **Java 21+**
-- **Node.js 18+** e **npm**
-- **MySQL** rodando localmente
-- **Angular CLI** (`npm install -g @angular/cli`)
-
-### Backend
-
-```bash
-# 1. Navegue até a pasta do backend
-cd gestao
-
-# 2. Copie e configure as variáveis de ambiente
-cp .env.example .env
-# Edite o .env com suas credenciais do MySQL e uma chave JWT
-
-# 3. Execute com Maven Wrapper
-./mvnw spring-boot:run
-```
-
-O backend estará disponível em `http://localhost:8080`.
-
-### Frontend
-
-```bash
-# 1. Navegue até a pasta do frontend
-cd AngularCRUD-Gestao
-
-# 2. Instale as dependências
-npm install
-
-# 3. Inicie o servidor de desenvolvimento
-ng serve
-```
-
-O frontend estará disponível em `http://localhost:4200`.
-
-### Variáveis de Ambiente (Backend)
-
-| Variável         | Descrição                           | Exemplo                                      |
-| ---------------- | ----------------------------------- | -------------------------------------------- |
-| `DB_URL`         | URL de conexão com o MySQL          | `jdbc:mysql://localhost:3306/gestao_db`       |
-| `DB_USER`        | Usuário do banco                    | `root`                                       |
-| `DB_PASSWORD`    | Senha do banco                      | `senha123`                                   |
-| `JWT_SECRET`     | Chave secreta para assinar tokens   | `minha-chave-secreta-muito-segura`           |
-| `JWT_EXPIRATION` | Tempo de expiração do token (ms)    | `86400000` (24 horas, padrão)                |
 
 ---
 
